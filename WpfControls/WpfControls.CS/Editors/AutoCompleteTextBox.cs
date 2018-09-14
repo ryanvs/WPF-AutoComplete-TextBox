@@ -21,8 +21,9 @@
 
         public const string PartEditor = "PART_Editor";
         public const string PartPopup = "PART_Popup";
-
         public const string PartSelector = "PART_Selector";
+
+        public static readonly DependencyProperty CharacterCasingProperty = DependencyProperty.Register("CharacterCasing", typeof(CharacterCasing), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(CharacterCasing.Normal));
         public static readonly DependencyProperty DelayProperty = DependencyProperty.Register("Delay", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(200));
         public static readonly DependencyProperty DisplayMemberProperty = DependencyProperty.Register("DisplayMember", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
         public static readonly DependencyProperty IconPlacementProperty = DependencyProperty.Register("IconPlacement", typeof(IconPlacement), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(IconPlacement.Left));
@@ -34,14 +35,13 @@
         public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ItemTemplateSelectorProperty = DependencyProperty.Register("ItemTemplateSelector", typeof(DataTemplateSelector), typeof(AutoCompleteTextBox));
         public static readonly DependencyProperty LoadingContentProperty = DependencyProperty.Register("LoadingContent", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(0));
+        public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register("MaxPopUpHeight", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(600));
         public static readonly DependencyProperty ProviderProperty = DependencyProperty.Register("Provider", typeof(ISuggestionProvider), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
-        public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(0));
-        public static readonly DependencyProperty CharacterCasingProperty = DependencyProperty.Register("CharacterCasing", typeof(CharacterCasing), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(CharacterCasing.Normal));
-        public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register("MaxPopUpHeight", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(600));
-
         public static readonly DependencyProperty WatermarkProperty = DependencyProperty.Register("Watermark", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
+
         private BindingEvaluator _bindingEvaluator;
 
         private TextBox _editor;
@@ -50,7 +50,7 @@
 
         private string _filter;
 
-        private bool _isUpdatingText;
+        private volatile bool _isUpdatingText;
 
         private Selector _itemsSelector;
 
@@ -58,11 +58,10 @@
 
         private SelectionAdapter _selectionAdapter;
 
-        private bool _selectionCancelled;
+        private volatile bool _selectionCancelled;
 
         private SuggestionsAdapter _suggestionsAdapter;
 
-        
         #endregion
 
         #region "Constructors"
@@ -76,14 +75,6 @@
 
         #region "Properties"
 
-       
-        public int MaxPopupHeight
-        {
-            get { return (int) GetValue(MaxPopUpHeightProperty); }
-            set { SetValue(MaxPopUpHeightProperty, value);}
-        }
-
-      
         public BindingEvaluator BindingEvaluator
         {
             get { return _bindingEvaluator; }
@@ -96,23 +87,15 @@
             set { SetValue(CharacterCasingProperty, value);}
         }
 
-        public int MaxLength
-        {
-            get { return (int) GetValue(DelayProperty); }
-            set { SetValue(MaxLengthProperty, value); }
-        }
-
         public int Delay
         {
             get { return (int)GetValue(DelayProperty); }
-
             set { SetValue(DelayProperty, value); }
         }
 
         public string DisplayMember
         {
             get { return (string)GetValue(DisplayMemberProperty); }
-
             set { SetValue(DisplayMemberProperty, value); }
         }
 
@@ -137,42 +120,36 @@
         public object Icon
         {
             get { return GetValue(IconProperty); }
-
             set { SetValue(IconProperty, value); }
         }
 
         public IconPlacement IconPlacement
         {
             get { return (IconPlacement)GetValue(IconPlacementProperty); }
-
             set { SetValue(IconPlacementProperty, value); }
         }
 
         public Visibility IconVisibility
         {
             get { return (Visibility)GetValue(IconVisibilityProperty); }
-
             set { SetValue(IconVisibilityProperty, value); }
         }
 
         public bool IsDropDownOpen
         {
             get { return (bool)GetValue(IsDropDownOpenProperty); }
-
             set { SetValue(IsDropDownOpenProperty, value); }
         }
 
         public bool IsLoading
         {
             get { return (bool)GetValue(IsLoadingProperty); }
-
             set { SetValue(IsLoadingProperty, value); }
         }
 
         public bool IsReadOnly
         {
             get { return (bool)GetValue(IsReadOnlyProperty); }
-
             set { SetValue(IsReadOnlyProperty, value); }
         }
 
@@ -185,7 +162,6 @@
         public DataTemplate ItemTemplate
         {
             get { return (DataTemplate)GetValue(ItemTemplateProperty); }
-
             set { SetValue(ItemTemplateProperty, value); }
         }
 
@@ -198,8 +174,19 @@
         public object LoadingContent
         {
             get { return GetValue(LoadingContentProperty); }
-
             set { SetValue(LoadingContentProperty, value); }
+        }
+
+        public int MaxLength
+        {
+            get { return (int)GetValue(DelayProperty); }
+            set { SetValue(MaxLengthProperty, value); }
+        }
+
+        public int MaxPopupHeight
+        {
+            get { return (int)GetValue(MaxPopUpHeightProperty); }
+            set { SetValue(MaxPopUpHeightProperty, value); }
         }
 
         public Popup Popup
@@ -211,14 +198,12 @@
         public ISuggestionProvider Provider
         {
             get { return (ISuggestionProvider)GetValue(ProviderProperty); }
-
             set { SetValue(ProviderProperty, value); }
         }
 
         public object SelectedItem
         {
             get { return GetValue(SelectedItemProperty); }
-
             set { SetValue(SelectedItemProperty, value); }
         }
 
@@ -231,14 +216,12 @@
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
-
             set { SetValue(TextProperty, value); }
         }
 
         public string Watermark
         {
             get { return (string)GetValue(WatermarkProperty); }
-
             set { SetValue(WatermarkProperty, value); }
         }
 
@@ -255,7 +238,12 @@
                 if (act.Editor != null & !act._isUpdatingText)
                 {
                     act._isUpdatingText = true;
-                    act.Editor.Text = act.BindingEvaluator.Evaluate(e.NewValue);
+                    string text = act.BindingEvaluator.Evaluate(e.NewValue);
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        act.Editor.Text = text;
+                        act.Text = text;
+                    }
                     act._isUpdatingText = false;
                 }
             }
@@ -268,7 +256,6 @@
                 listBox.ScrollIntoView(listBox.SelectedItem);
         }
 
-        
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -365,7 +352,8 @@
             if (Editor.Text.Length > 0)
             {
                 IsLoading = true;
-                IsDropDownOpen = true;
+                if (Editor.IsKeyboardFocused)
+                    IsDropDownOpen = true;
                 ItemsSelector.ItemsSource = null;
                 FetchTimer.IsEnabled = true;
                 FetchTimer.Start();
@@ -374,6 +362,7 @@
             {
                 IsDropDownOpen = false;
             }
+            this.Text = this.Editor.Text; // Save to Text Property
         }
 
         private void OnFetchTimerTick(object sender, EventArgs e)
@@ -484,9 +473,9 @@
                 ParameterizedThreadStart thInfo = new ParameterizedThreadStart(GetSuggestionsAsync);
                 Thread th = new Thread(thInfo);
                 th.Start(new object[] {
-				searchText,
-				_actb.Provider
-			});
+                    searchText,
+                    _actb.Provider
+                });
             }
 
             private void DisplaySuggestions(IEnumerable suggestions, string filter)
@@ -501,7 +490,6 @@
                     _actb.ItemsSelector.ItemsSource = suggestions;
                     _actb.IsDropDownOpen = _actb.ItemsSelector.HasItems;
                 }
-
             }
 
             private void GetSuggestionsAsync(object param)
@@ -511,9 +499,9 @@
                 ISuggestionProvider provider = args[1] as ISuggestionProvider;
                 IEnumerable list = provider.GetSuggestions(searchText);
                 _actb.Dispatcher.BeginInvoke(new Action<IEnumerable, string>(DisplaySuggestions), DispatcherPriority.Background, new object[] {
-				list,
-				searchText
-			});
+                    list,
+                    searchText
+                });
             }
 
             #endregion

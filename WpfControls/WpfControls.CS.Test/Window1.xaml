@@ -77,12 +77,24 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <Label Content="_Open" />
+
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding IsEnabled, ElementName=Actb}" Content="Is _Enabled"/>
+            <CheckBox IsChecked="{Binding IsReadOnly, ElementName=Actb}" Content="Is _Read Only"/>
+        </StackPanel>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Text"/>
+        <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Margin="4" Text="{Binding Text, ElementName=Actb, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="_Open" />
         <wpf:AutoCompleteTextBox VerticalAlignment="Top"
                                  Height="25"
                                  Grid.Column="1"
-                                 MaxPopupHeight="120"
+                                 Grid.Row="2"
+                                 MaxPopupHeight="240"
                                  DisplayMember="FullName"
                                  ItemTemplateSelector="{StaticResource CustomTemplateSelector}"
                                  Watermark="Search here"
@@ -114,7 +126,7 @@
             </wpf:AutoCompleteTextBox.Icon>
         </wpf:AutoCompleteTextBox>
         <StackPanel Grid.Column="1"
-                    Grid.Row="1"
+                    Grid.Row="3"
                     Margin="0,10"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">

@@ -1,8 +1,8 @@
 ﻿namespace WpfControls
 {
-
     using System.Windows;
     using System.Windows.Data;
+
     public class BindingEvaluator : FrameworkElement
     {
 

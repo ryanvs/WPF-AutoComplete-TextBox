@@ -87,6 +87,10 @@
                                              HorizontalAlignment="Stretch"
                                              VerticalAlignment="Center"
                                              Style="{StaticResource ResourceKey=TransparentTextBoxStyle}"
+                                             IsEnabled="{TemplateBinding IsEnabled}"
+                                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                                             CharacterCasing="{Binding Path=CharacterCasing, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+                                             MaxLength="{Binding Path=MaxLength, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
                                              Text="{Binding Path=Text, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
                                 </Grid>
                             </DockPanel>
@@ -143,6 +147,22 @@
                             <Setter Property="DockPanel.Dock"
                                     Value="Right"
                                     TargetName="PART_Icon" />
+                        </Trigger>
+                        <Trigger Property="IsReadOnly"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            <Setter Property="Foreground"
+                                    Value="LightGray"
+                                    TargetName="PART_Editor" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            <Setter Property="Foreground"
+                                    Value="LightGray"
+                                    TargetName="PART_Editor" />
                         </Trigger>
                         <Trigger Property="Validation.HasError" Value="True">
                             <Setter Property="BorderBrush"

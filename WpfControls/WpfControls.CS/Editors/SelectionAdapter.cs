@@ -60,26 +60,12 @@
                 case Key.Up:
                     DecrementSelection();
                     break;
+                case Key.Tab:
                 case Key.Enter:
-                    if (Commit != null)
-                    {
-                        Commit();
-                    }
-
+                    Commit?.Invoke();
                     break;
                 case Key.Escape:
-                    if (Cancel != null)
-                    {
-                        Cancel();
-                    }
-
-                    break;
-                case Key.Tab:
-                    if (Commit != null)
-                    {
-                        Commit();
-                    }
-
+                    Cancel?.Invoke();
                     break;
             }
         }
@@ -94,10 +80,7 @@
             {
                 SelectorControl.SelectedIndex -= 1;
             }
-            if (SelectionChanged != null)
-            {
-                SelectionChanged();
-            }
+            SelectionChanged?.Invoke();
         }
 
         private void IncrementSelection()
@@ -110,18 +93,12 @@
             {
                 SelectorControl.SelectedIndex += 1;
             }
-            if (SelectionChanged != null)
-            {
-                SelectionChanged();
-            }
+            SelectionChanged?.Invoke();
         }
 
         private void OnSelectorMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Commit != null)
-            {
-                Commit();
-            }
+            Commit?.Invoke();
         }
 
         #endregion

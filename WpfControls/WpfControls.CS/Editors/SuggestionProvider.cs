@@ -1,11 +1,10 @@
 ﻿namespace WpfControls.Editors
 {
-
     using System;
     using System.Collections;
+
     public class SuggestionProvider : ISuggestionProvider
     {
-
 
         #region Private Fields
 
